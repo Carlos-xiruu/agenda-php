@@ -4,19 +4,20 @@ error_reporting(E_ALL);
 require_once 'db.php';
 
 $mensagem = "";
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['cliente_id'])) {
     $cliente_id = $_POST['cliente_id'];
     $data = $_POST['data'];
     $hora = $_POST['hora'];
     $descricao = $_POST['descricao'];
 
-    $sql = "INSERT INTO agendamentos (cliente_id, data, hora, descricao) VALUES (:cliente_id, :data,:hora, :descricao)";
+    $sql = "INSERT INTO agendamentos (cliente_id, data, hora, descricao) 
+            VALUES (:cliente_id, :data, :hora, :descricao)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':cliente_id' => $cliente_id,
-        ':data'        => $data,
-        ':hora'         => $hora,
-        ':descricao'    => $descricao
+        ':data'       => $data,
+        ':hora'       => $hora,
+        ':descricao'  => $descricao
     ]);
 
     $mensagem = "Agendamento criado com sucesso!";
