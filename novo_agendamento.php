@@ -10,21 +10,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hora = $_POST['hora'];
     $descricao = $_POST['descricao'];
 
-    $sql = "INSERT INTO agendamentos (cliente_id, data, hora, descricao) 
-            VALUES (:cliente_id, :data, :hora, :descricao)";
+    $sql = "INSERT INTO agendamentos (cliente_id, data, hora, descricao) VALUES (:cliente_id, :data,:hora, :descricao)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':cliente_id' => $cliente_id,
-        ':data'       => $data,
-        ':hora'       => $hora,
-        ':descricao'  => $descricao
+        ':data'        => $data,
+        ':hora'         => $hora,
+        ':descricao'    => $descricao
     ]);
 
     $mensagem = "Agendamento criado com sucesso!";
 }
 
-// Buscar clientes para o select
 $clientes = $pdo->query("SELECT id, nome FROM clientes")->fetchAll(PDO::FETCH_ASSOC);
+?>
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -33,31 +32,32 @@ $clientes = $pdo->query("SELECT id, nome FROM clientes")->fetchAll(PDO::FETCH_AS
     <title>Novo Agendamento</title>
 </head>
 <body>
-    <h1>Criar Agendamento</h1>
+    <h1>Criar agendamento</h1>
 
     <?php if ($mensagem): ?>
         <p><?= $mensagem ?></p>
     <?php endif; ?>
+    
 
     <form method="POST">
         <label>Cliente:</label><br>
         <select name="cliente_id" required>
-            <option value="">Selecione...</option>
+            <option value="">Selecione um cliente</option>
             <?php foreach ($clientes as $cliente): ?>
                 <option value="<?= $cliente['id'] ?>"><?= $cliente['nome'] ?></option>
             <?php endforeach; ?>
-        </select><br><br>
 
-        <label>Data:</label><br>
-        <input type="date" name="data" required><br><br>
+        <label>Telefone:</label><br>
+        <input type="text" name="telefone"><br><br>
 
-        <label>Hora:</label><br>
-        <input type="time" name="hora" required><br><br>
+        <label>Email:</label><br>
+        <input type="text" name="email"><br><br>
 
-        <label>Descrição:</label><br>
-        <input type="text" name="descricao"><br><br>
+        <label>Motivo do agendamento:</label><br>
+        <input type="text" name="Descricao"><br><br>
+        
 
-        <button type="submit">Criar Agendamento</button>
+        <button type="submit">Criar agendamento</button>
     </form>
 
     <br>
