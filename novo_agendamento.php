@@ -55,7 +55,13 @@ $clientes = $pdo->query("SELECT id, nome FROM clientes")->fetchAll(PDO::FETCH_AS
         <input type="text" name="email"><br><br>
 
         <label>Motivo do agendamento:</label><br>
-        <input type="text" name="Descricao"><br><br>
+        <input type="text" name="descricao"><br><br>
+
+        <label>Data:</label><br>
+        <input type="date" name="data" required><br><br>
+
+        <label>Hora:</label><br>
+        <input type="time" name="hora" required><br><br>
         
 
         <button type="submit">Criar agendamento</button>

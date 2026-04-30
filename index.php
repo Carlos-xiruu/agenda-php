@@ -1,66 +1,44 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 require_once 'db.php';
 
-$mensagem = "";
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $cliente_id = $_POST['cliente_id'];
-    $data = $_POST['data'];
-    $hora = $_POST['hora'];
-    $descricao = $_POST['descricao'];
-
-    $sql = "INSERT INTO agendamentos (cliente_id, data, hora, descricao) 
-            VALUES (:cliente_id, :data, :hora, :descricao)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':cliente_id' => $cliente_id,
-        ':data'       => $data,
-        ':hora'       => $hora,
-        ':descricao'  => $descricao
-    ]);
-
-    $mensagem = "Agendamento criado com sucesso!";
-}
-
-// Buscar clientes para o select
-$clientes = $pdo->query("SELECT id, nome FROM clientes")->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query("SELECT * FROM clientes");
+$clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Novo Agendamento</title>
-</head>
-<body>
-    <h1>Criar Agendamento</h1>
 
-    <?php if ($mensagem): ?>
-        <p><?= $mensagem ?></p>
-    <?php endif; ?>
+<?php require_once 'header.php'; ?>
 
-    <form method="POST">
-        <label>Cliente:</label><br>
-        <select name="cliente_id" required>
-            <option value="">Selecione...</option>
-            <?php foreach ($clientes as $cliente): ?>
-                <option value="<?= $cliente['id'] ?>"><?= $cliente['nome'] ?></option>
-            <?php endforeach; ?>
-        </select><br><br>
+    <h1>Clientes Cadastrados</h1>
 
-        <label>Data:</label><br>
-        <input type="date" name="data" required><br><br>
+    <a <button class="btn btn-primary" href="novo_cliente.php">+ Novo Cliente</button></a>
 
-        <label>Hora:</label><br>
-        <input type="time" name="hora" required><br><br>
+    <br><br>
 
-        <label>Descrição:</label><br>
-        <input type="text" name="descricao"><br><br>
 
-        <button type="submit">Criar Agendamento</button>
-    </form>
+    <table class="table table-dark table-striped table-hover">
+     <thead>
+       <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Telefone</th>
+            <th scope="col">Email</th>
+            <th scope="col">Ações</th>
+         </tr>
 
-    <br>
-    <a href="index.php">Voltar</a>
+    <?php foreach ($clientes as $cliente): ?>
+     </thead>
+  <tbody>
+    <tr>
+      <th scope="row"><?= $cliente['id'] ?></th>
+      <td><?= $cliente['nome'] ?></td>
+      <td><?= $cliente['telefone'] ?></td>
+      <td><?= $cliente['email'] ?></td>
+      <td> <button class="btn btn-danger" onclick="return confirm('Tem certeza que deseja deletar este cliente?');">Deletar</button>
+      </td>
+    </tr>
+  </tbody>
+   <?php endforeach; ?>
+</table>
+
+</div>
 </body>
 </html>
